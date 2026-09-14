@@ -14,6 +14,61 @@
 <meta property="og:description" content="Generate live 6-digit one-time codes (TOTP) in your browser. Paste a secret or scan a QR, copy the live code. No signup, keys stay on your device." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://onetimecode.site/" />
+<meta property="og:image" content="https://onetimecode.site/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="OneTimeCode.site — Free Online One Time Code Generator" />
+<meta name="twitter:description" content="Generate live 6-digit one-time codes and 2FA authenticator codes in your browser. No signup, keys stay on your device." />
+<meta name="twitter:image" content="https://onetimecode.site/og-image.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="theme-color" content="#0b0f14" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I get a one time code online?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Paste your secret or scan the QR on OneTimeCode.site — the page becomes your online one time code generator and streams a fresh 6-digit one-time code every 30 seconds." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this a real 2FA authenticator?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. This page is a standards-based 2FA authenticator (TOTP, RFC 6238) running fully in your browser. It generates the same one-time codes as Google Authenticator or Authy." }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from Google Authenticator?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Same math, no phone needed. Google Authenticator locks codes to one device; this free online 2FA authenticator streams them into any browser tab with multiple feeds side by side." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this safe to use?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Secrets are processed locally in your browser and only kept in your own local storage if you pin them. There is no account system and no server receiving your keys." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it offline?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Once the page has loaded, yes. Disconnect the network and the live codes keep streaming — they only need your device clock, not a connection." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my code rejected?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Almost always clock drift or a mistyped secret. Enable automatic time sync, re-paste the secret carefully, and confirm the service expects 6-digit 30-second TOTP." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do pinned feeds survive a restart?",
+      "acceptedAnswer": { "@type": "Answer", "text": "They stay in this browser until you clear site data. Export a JSON backup from the Pinned live feeds panel so you can re-import after a cleanup." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which services are supported?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Any service offering standard authenticator setup — the same QR or secret that Google Authenticator or Authy would take works here unchanged." }
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="styles.css" />
 <script src="https://unpkg.com/otpauth@9.2.2/dist/otpauth.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
