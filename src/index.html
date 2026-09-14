@@ -3,15 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>2FA Live — Instant TOTP Codes Online</title>
-<meta name="description" content="2FA Live: generate live 6-digit authenticator codes in your browser. Paste a secret, scan a QR, get your live code. No signup, keys never leave your device." />
+<title>One Time Code Generator Online — Live TOTP Codes | OneTimeCode.site</title>
+<meta name="description" content="OneTimeCode.site: free online one time code generator. Get live 6-digit one-time codes (TOTP) in your browser. Paste a secret, scan a QR, copy your code. No signup, keys never leave your device." />
+<link rel="canonical" href="https://onetimecode.site/" />
+<meta property="og:title" content="OneTimeCode.site — Free Online One Time Code Generator" />
+<meta property="og:description" content="Generate live 6-digit one-time codes (TOTP) in your browser. Paste a secret or scan a QR, copy the live code. No signup, keys stay on your device." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://onetimecode.site/" />
 <link rel="stylesheet" href="styles.css" />
 <script src="https://unpkg.com/otpauth@9.2.2/dist/otpauth.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
 <header class="nav">
-  <a class="brand" href="#"><span class="brand-dot live"></span>2FA Live</a>
+  <a class="brand" href="#"><span class="brand-dot live"></span>OneTimeCode.site</a>
   <nav>
     <a href="#app">Live codes</a>
     <a href="#faq">FAQ</a>
@@ -20,8 +25,8 @@
 
 <main class="page">
   <section class="intro">
-    <h1>Your live 2FA codes, right here.</h1>
-    <p>Drop in a secret, get a fresh 6-digit code every 30 seconds. No app install, no signup — codes generate live in this tab.</p>
+    <h1>Free online one time code generator.</h1>
+    <p>Drop in a secret, get a fresh 6-digit one-time code every 30 seconds. No app install, no signup — your one time code generates live in this tab.</p>
   </section>
 
   <div id="app" class="app">
@@ -93,9 +98,9 @@
   </div>
 
   <section class="lede">
-    <h1>Get live 2FA codes in seconds</h1>
-    <p class="standfirst">A fast, free browser alternative to authenticator apps — no install, no signup, no phone needed.</p>
-    <p>Locked out of your phone, working from a desktop, or just tired of unlocking your device for every login? 2FA Live streams fresh 6-digit TOTP codes straight into this tab. Paste a secret or scan a QR code once, and your live code starts ticking — computed locally, refreshed every 30 seconds, never uploaded anywhere.</p>
+    <h1>Get a live one time code in seconds</h1>
+    <p class="standfirst">A fast, free browser one time code generator — no install, no signup, no phone needed.</p>
+    <p>Locked out of your phone, working from a desktop, or just tired of unlocking your device for every login? OneTimeCode.site streams a fresh 6-digit one-time code (TOTP) straight into this tab. Paste a secret or scan a QR code once, and your live one time code starts ticking — computed locally, refreshed every 30 seconds, never uploaded anywhere.</p>
   </section>
 
   <article class="content">
@@ -118,17 +123,17 @@
     </section>
 
     <section id="what-is-2fa" class="prose">
-      <h2>What is 2FA, in plain words?</h2>
-      <p>Two-factor authentication is a second lock on your accounts. Your password is the first lock — something you know. The live code is the second — something generated fresh from a secret only you and the service share.</p>
-      <p>Passwords leak, get phished, or get guessed. A time-based code fixes that weakness: even if someone sees your current 6 digits, they expire within seconds. By the time an attacker types them in, the window has already moved on.</p>
-      <p>Apps like Google Authenticator, Microsoft Authenticator, and Authy popularized this. 2FA Live speaks the exact same open standard (TOTP, RFC 6238), so anywhere those apps work, this page works too — right in the browser.</p>
+      <h2>What is a one time code, in plain words?</h2>
+      <p>A one time code is a second lock on your accounts. Your password is the first lock — something you know. The live one-time code is the second — something generated fresh from a secret only you and the service share.</p>
+      <p>Passwords leak, get phished, or get guessed. A time-based one time code fixes that weakness: even if someone sees your current 6 digits, they expire within seconds. By the time an attacker types them in, the window has already moved on.</p>
+      <p>Apps like Google Authenticator, Microsoft Authenticator, and Authy popularized this. OneTimeCode.site speaks the exact same open standard (TOTP, RFC 6238), so anywhere those apps work, this online one time code generator works too — right in the browser.</p>
     </section>
 
     <section id="how-it-works" class="prose">
-      <h2>How does a live TOTP code work?</h2>
-      <p>When you enable two-factor on a service, it hands you a secret — either as a QR image or a line of base32 text. That secret is the shared seed between you and the service.</p>
-      <p>Both sides then run the same recipe: take the secret, mix it with the current 30-second time window, and out comes the same 6-digit code. Because both clocks agree on the time, both codes match — no network call between them needed.</p>
-      <p>That is why sync matters. If your device clock drifts by a minute, your codes stop matching. Keep automatic time enabled and every live code lands on the first try.</p>
+      <h2>How does a live one time code work?</h2>
+      <p>When you enable two-factor on a service, it hands you a secret — either as a QR image or a line of base32 text. That secret is the shared seed between you and this one time code generator.</p>
+      <p>Both sides then run the same recipe: take the secret, mix it with the current 30-second time window, and out comes the same 6-digit one-time code. Because both clocks agree on the time, both codes match — no network call between them needed.</p>
+      <p>That is why sync matters. If your device clock drifts by a minute, your one time codes stop matching. Keep automatic time enabled and every live code lands on the first try.</p>
       <div class="steps">
         <div class="step"><span class="step-n">1</span><div><strong>Grab your secret.</strong> On the service, enable 2FA and choose authenticator app. If a QR shows, look for a show secret or manual entry option to reveal the text key.</div></div>
         <div class="step"><span class="step-n">2</span><div><strong>Feed it here.</strong> Paste the secret into the box, or hit Scan QR with your camera, or upload a screenshot of the QR. Name it and pin it if you will reuse it.</div></div>
@@ -144,8 +149,8 @@
     </section>
 
     <section id="compatibility" class="prose">
-      <h2>Works anywhere authenticator apps work</h2>
-      <p>2FA Live implements the open TOTP standard, so it slots into any service that offers authenticator-app setup, including:</p>
+      <h2>One time codes work anywhere authenticator apps work</h2>
+      <p>OneTimeCode.site implements the open TOTP standard, so this free one time code generator slots into any service that offers authenticator-app setup, including:</p>
       <ul class="ticks">
         <li>Crypto exchanges and wallets</li>
         <li>GitHub, GitLab, and dev platforms</li>
@@ -158,6 +163,8 @@
 
     <section id="faq" class="faq prose">
       <h2>Live-code FAQ</h2>
+      <h3>How do I get a one time code online?</h3>
+      <p>Paste your secret or scan the QR here — this page instantly becomes your online one time code generator and streams a fresh 6-digit one-time code every 30 seconds.</p>
       <h3>Is this safe to use?</h3>
       <p>Yes. Secrets are processed locally in your browser and only kept in your own local storage if you pin them. There is no account system and no server receiving your keys.</p>
       <h3>Can I use it offline?</h3>
@@ -180,7 +187,7 @@
 </main>
 
 <footer>
-  <span>2FA Live — instant codes, no signup, keys stay in your browser.</span>
+  <span>OneTimeCode.site — free online one time code generator, no signup, keys stay in your browser.</span>
 </footer>
 
 <script src="app.js"></script>
