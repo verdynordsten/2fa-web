@@ -7,6 +7,11 @@ terser src/app.js -c -m -o dist/app.js
 cleancss -o dist/styles.css src/styles.css
 html-minifier-terser --collapse-whitespace --remove-comments --minify-css true --minify-js true -o dist/index.html src/index.html
 
+# Copy static assets (favicons, images) that minifiers skip
+for asset in src/*.png src/*.ico src/*.svg src/*.webmanifest; do
+  [ -e "$asset" ] && cp "$asset" dist/
+done
+
 echo "--- sizes (src vs dist) ---"
 for f in app.js styles.css index.html; do
   s=$(stat -c%s "src/$f"); d=$(stat -c%s "dist/$f")
