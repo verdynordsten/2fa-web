@@ -7,8 +7,8 @@ terser src/app.js -c -m -o dist/app.js
 cleancss -o dist/styles.css src/styles.css
 html-minifier-terser --collapse-whitespace --remove-comments --minify-css true --minify-js true -o dist/index.html src/index.html
 
-# Copy static assets (favicons, images) that minifiers skip
-for asset in src/*.png src/*.ico src/*.svg src/*.webmanifest; do
+# Copy static assets (favicons, images, SEO files) that minifiers skip
+for asset in src/*.png src/*.ico src/*.svg src/*.webmanifest src/*.txt src/*.xml; do
   [ -e "$asset" ] && cp "$asset" dist/
 done
 
