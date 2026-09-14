@@ -34,3 +34,5 @@ nginx.conf    # Static serving, gzip, cache policy
 ## Privacy
 
 Secrets are computed locally with standard TOTP (RFC 6238). Pinned feeds stay in the visitor's own browser storage. Nothing is uploaded anywhere.
+
+Deploy key verified.
