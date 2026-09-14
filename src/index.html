@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>2FA Live — Instant TOTP Codes Online</title>
+<meta name="description" content="2FA Live: generate live 6-digit authenticator codes in your browser. Paste a secret, scan a QR, get your live code. No signup, keys never leave your device." />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://unpkg.com/otpauth@9.2.2/dist/otpauth.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#"><span class="brand-dot live"></span>2FA Live</a>
+  <nav>
+    <a href="#app">Live codes</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main class="page">
+  <section class="intro">
+    <h1>Your live 2FA codes, right here.</h1>
+    <p>Drop in a secret, get a fresh 6-digit code every 30 seconds. No app install, no signup — codes generate live in this tab.</p>
+  </section>
+
+  <div id="app" class="app">
+    <!-- LEFT: live token -->
+    <section class="panel token-panel">
+      <div class="token-top">
+        <div class="eyebrow live-label"><span class="pulse"></span>Live code</div>
+        <div class="timer"><span class="timer-dot"></span><span id="countText">30s left</span></div>
+      </div>
+      <div class="code-card"><div id="codeDisplay" class="code">--- ---</div></div>
+      <div class="timebar"><div id="timeFill"></div></div>
+      <div class="bar-meta"><span>Refreshing live</span><span>30s period</span><span>6 digits</span></div>
+      <button id="copyBtn" class="copy-button" type="button">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        Copy code
+      </button>
+      <label class="autocopy"><input id="autoCopy" type="checkbox" /> Auto-copy when it refreshes</label>
+      <div class="note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ee6a8" stroke-width="2"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        <p>Generates live codes fully offline in this tab after load. Your secrets stream into codes here — never uploaded anywhere.</p>
+      </div>
+      <div id="activeLabel" class="active-label">Waiting for a live feed</div>
+    </section>
+
+    <!-- RIGHT: secret intake + stored keys -->
+    <section class="panel intake-panel">
+      <h2 class="eyebrow">Feed a secret</h2>
+      <div class="secret-box">
+        <textarea id="secretInput" placeholder="Paste a base32 secret or an otpauth:// URI" autocomplete="off" spellcheck="false"></textarea>
+        <button id="clearBtn" class="close" aria-label="Clear secret" type="button">&times;</button>
+      </div>
+      <div class="button-row">
+        <button id="pasteBtn" class="ghost-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          Paste key
+        </button>
+        <div class="qr-group">
+          <button id="scanBtn" class="ghost-btn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3.5"/></svg>
+            Scan QR
+          </button>
+          <button id="uploadBtn" class="ghost-btn icon-only" type="button" title="Upload QR image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+          </button>
+        </div>
+      </div>
+      <input id="qrFile" type="file" accept="image/*" hidden />
+      <div id="scannerWrap" class="scanner hidden">
+        <video id="scannerVideo" playsinline muted></video>
+        <button id="stopScanBtn" class="btn-danger" type="button">Stop camera</button>
+      </div>
+      <div class="save-row">
+        <input id="labelInput" type="text" placeholder="Label, e.g. github-alice" autocomplete="off" />
+        <button id="addBtn" class="save-btn" type="button">Save key</button>
+      </div>
+
+      <div class="recent-header">
+        <span>Pinned live feeds</span>
+        <div class="recent-actions">
+          <button id="exportBtn" type="button">Export</button>
+          <button id="importBtn" type="button">Import</button>
+          <button id="clearCache" type="button">Clear</button>
+          <input id="importFile" type="file" accept="application/json" hidden />
+        </div>
+      </div>
+      <ul id="accountList" class="recent-list"></ul>
+      <p class="hint">Kept only in this browser. Export a JSON backup before clearing site data.</p>
+    </section>
+  </div>
+
+  <section class="lede">
+    <h1>Get live 2FA codes in seconds</h1>
+    <p class="standfirst">A fast, free browser alternative to authenticator apps — no install, no signup, no phone needed.</p>
+    <p>Locked out of your phone, working from a desktop, or just tired of unlocking your device for every login? 2FA Live streams fresh 6-digit TOTP codes straight into this tab. Paste a secret or scan a QR code once, and your live code starts ticking — computed locally, refreshed every 30 seconds, never uploaded anywhere.</p>
+  </section>
+
+  <article class="content">
+    <section id="features" class="prose">
+      <h2>Why live codes beat reaching for your phone</h2>
+      <div class="cards">
+        <div class="mini-card">
+          <h3>Live by default</h3>
+          <p>Your code is always current. A smooth timebar counts every cycle down, and the display rolls over to a fresh code the instant the window turns — no refresh button, no waiting on your phone.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Private by design</h3>
+          <p>Code math happens entirely inside this tab with standard cryptography. No accounts, no analytics on your secrets, no server round-trip. Close the tab and the live session is gone.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Many feeds, one screen</h3>
+          <p>Pin as many secrets as you run — trading accounts, dev tools, socials — and watch every live code tick side by side. Copy any of them in one click, export a JSON backup whenever you like.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="what-is-2fa" class="prose">
+      <h2>What is 2FA, in plain words?</h2>
+      <p>Two-factor authentication is a second lock on your accounts. Your password is the first lock — something you know. The live code is the second — something generated fresh from a secret only you and the service share.</p>
+      <p>Passwords leak, get phished, or get guessed. A time-based code fixes that weakness: even if someone sees your current 6 digits, they expire within seconds. By the time an attacker types them in, the window has already moved on.</p>
+      <p>Apps like Google Authenticator, Microsoft Authenticator, and Authy popularized this. 2FA Live speaks the exact same open standard (TOTP, RFC 6238), so anywhere those apps work, this page works too — right in the browser.</p>
+    </section>
+
+    <section id="how-it-works" class="prose">
+      <h2>How does a live TOTP code work?</h2>
+      <p>When you enable two-factor on a service, it hands you a secret — either as a QR image or a line of base32 text. That secret is the shared seed between you and the service.</p>
+      <p>Both sides then run the same recipe: take the secret, mix it with the current 30-second time window, and out comes the same 6-digit code. Because both clocks agree on the time, both codes match — no network call between them needed.</p>
+      <p>That is why sync matters. If your device clock drifts by a minute, your codes stop matching. Keep automatic time enabled and every live code lands on the first try.</p>
+      <div class="steps">
+        <div class="step"><span class="step-n">1</span><div><strong>Grab your secret.</strong> On the service, enable 2FA and choose authenticator app. If a QR shows, look for a show secret or manual entry option to reveal the text key.</div></div>
+        <div class="step"><span class="step-n">2</span><div><strong>Feed it here.</strong> Paste the secret into the box, or hit Scan QR with your camera, or upload a screenshot of the QR. Name it and pin it if you will reuse it.</div></div>
+        <div class="step"><span class="step-n">3</span><div><strong>Copy the live code.</strong> The display starts streaming instantly. Hit Copy code and paste it into the service before the bar runs out.</div></div>
+      </div>
+    </section>
+
+    <section id="browser-edge" class="prose">
+      <h2>Why run it in the browser?</h2>
+      <p>Phone-based apps tie your logins to one piece of hardware. Lose the phone, reset it, or run out of battery at the wrong moment, and you are locked out of everything at once.</p>
+      <p>A browser generator breaks that single point of failure. Any laptop, desktop, or tablet becomes a code terminal in seconds. Keep your backup secrets in a password manager, stream the live codes from here, and you can log in from anywhere without reinstalling or re-enrolling anything.</p>
+      <p>It is also kinder for multi-account workflows. Instead of scrolling one phone list, you pin every feed on one wide screen and copy codes in rotation — handy when you juggle several logins a day.</p>
+    </section>
+
+    <section id="compatibility" class="prose">
+      <h2>Works anywhere authenticator apps work</h2>
+      <p>2FA Live implements the open TOTP standard, so it slots into any service that offers authenticator-app setup, including:</p>
+      <ul class="ticks">
+        <li>Crypto exchanges and wallets</li>
+        <li>GitHub, GitLab, and dev platforms</li>
+        <li>Discord, Steam, and gaming accounts</li>
+        <li>X, Meta, and social logins</li>
+        <li>Gmail, Outlook, and email providers</li>
+        <li>Banks, brokers, and fintech apps</li>
+      </ul>
+    </section>
+
+    <section id="faq" class="faq prose">
+      <h2>Live-code FAQ</h2>
+      <h3>Is this safe to use?</h3>
+      <p>Yes. Secrets are processed locally in your browser and only kept in your own local storage if you pin them. There is no account system and no server receiving your keys.</p>
+      <h3>Can I use it offline?</h3>
+      <p>Once the page has loaded, yes. Disconnect the network and the live codes keep streaming — they only need your device clock, not a connection.</p>
+      <h3>Why is my code rejected?</h3>
+      <p>Almost always clock drift or a mistyped secret. Enable automatic time sync, re-paste the secret carefully, and confirm the service expects 6-digit 30-second TOTP.</p>
+      <h3>Do pinned feeds survive a restart?</h3>
+      <p>They stay in this browser until you clear site data. Export a JSON backup from the Pinned live feeds panel so you can re-import after a cleanup.</p>
+      <h3>Which services are supported?</h3>
+      <p>Any service offering standard authenticator setup — the same QR or secret that Google Authenticator or Authy would take works here unchanged.</p>
+    </section>
+
+    <section class="prose legal">
+      <h2>Fine print</h2>
+      <p><strong>Privacy:</strong> no accounts, no key uploads, no tracking of your secrets. Pinned feeds live in your browser storage only.</p>
+      <p><strong>Responsibility:</strong> this tool is provided as-is. Keep offline backups of your original setup keys — if you lose them and clear this browser, nobody can recover your accounts for you.</p>
+      <p><strong>Fair use:</strong> protect your own accounts. Do not use live codes to access anything that is not yours.</p>
+    </section>
+  </article>
+</main>
+
+<footer>
+  <span>2FA Live — instant codes, no signup, keys stay in your browser.</span>
+</footer>
+
+<script src="app.js"></script>
+<div id="toast" class="toast hidden" role="status">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+  <span id="toastText">Done</span>
+</div>
+<div id="confirmWrap" class="confirm-wrap hidden" role="dialog" aria-modal="true">
+  <div class="confirm-card">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmText">This cannot be undone.</p>
+    <div class="confirm-btns">
+      <button id="confirmNo" class="confirm-no" type="button">No, keep it</button>
+      <button id="confirmYes" class="confirm-yes" type="button">Yes, delete</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
