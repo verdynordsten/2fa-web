@@ -1,8 +1,7 @@
 #!/bin/bash
 # Build minified dist/ from src/. Source of truth stays in src/.
 set -e
-cd /opt/data/scripts/2fa-web
-export PATH=$PATH:/home/hermes/.hermes/home/.npm-global/bin
+cd "$(dirname "$0")"
 
 terser src/app.js -c -m -o dist/app.js
 cleancss -o dist/styles.css src/styles.css
